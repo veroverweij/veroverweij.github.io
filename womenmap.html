@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base target="_top">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>SDG Map with Leaflet</title>
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 10px;
+			font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+			text-align: center;
+			
+
+		}
+		.leaflet-container {
+			height: 400px;
+			width: 600px;
+			max-width: 100%;
+			max-height: 100%;
+		}
+		#map {
+		display: block;
+		height: 550px;
+		width: 80%;
+		margin: auto;
+		}
+	</style>
+
+	<style>#map { width: 1000px; height: 700px; }
+.info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
+.legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }</style>
+</head>
+<body>
+<h2>
+<b>SDG 5.5<b> ACHIEVE GENDER EQUALITY AND EMPOWER ALL WOMEN AND GIRLS. </b><br><br>
+  <span class="sdg-subtitle">
+ SDG Target 5.5 - Ensure women’s full and effective participation and equal opportunities for leadership at all levels of decision-making in political, economic and public life.
+  </span>
+</h2>
+
+
+<div id='map'></div>
+<script type="text/javascript" src="SDG_Chloropleth_Women_interactive.geojson"></script>
+<script type="text/javascript">
+
+	const map = L.map('map', {
+		center: [15,5],
+		zoom: 2,
+		minZoom: 2,
+		maxZoom: 7,
+		maxBounds: [[-90, -180], [90, 180]],
+		maxBoundsViscosity: 1.0,
+		noWrap: true
+	});
+
+//UPDATE above - notice the SDG15v3.js file - that is my geometry file - replace that file with your own!
+//call the basemap you want to use
+	const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom: 19,
+		noWrap: true
+	}).addTo(map);
+
+	// control that shows attribute info on hover
+	const info = L.control();
+
+	info.onAdd = function (map) {
+		this._div = L.DomUtil.create('div', 'info');
+		this.update();
+		return this._div;
+	};
+
+		//UPDATE to call your own data for the interactivity- the name after "props" is the attribute name - look in your js file to find the attribute to call
+		// change class breaks and color depending on your values //UPDATE for our own legend - use colorbrewer.org for ideas for colors
+		//UPDATE legend to match the classes you coded - and the source of your data needs to reference the correct link
+	info.update = function (props) {
+		const contents = props ? `<b>${props.nam_en}</b><br />${props.unwp_2025} % of Seats covered by Women` : 'Hover over a state';
+		this._div.innerHTML = `<h4>5.5 Proportion of Seats held by Women in National Parliaments</h4>${contents}`;
+	};
+
+	info.addTo(map);
+
+
+	
+	
+	function getColor(d) {
+		return d >= 50 ? '#003f21' :
+			d > 41  ? '#006837' :
+			d > 31  ? '#31a354' :
+			d > 21   ? '#78c679' :
+			d > 11   ? '#c2e699' :
+			d > 0   ? '#ffffcc' : '#d6d6d6';
+	}
+
+//update the fill color to your variable 
+	function style(feature) {
+		return {
+			weight: 1.21,
+			opacity: 1,
+			color: 'white',
+			dashArray: '0',
+			fillOpacity: 0.9,
+			fillColor: getColor(feature.properties.unwp_2025)
+		};
+	}
+
+	function highlightFeature(e) {
+		const layer = e.target;
+
+		layer.setStyle({
+			weight: 5,
+			color: '#666',
+			dashArray: '',
+			fillOpacity: 0.7
+		});
+
+		layer.bringToFront();
+
+		info.update(layer.feature.properties);
+	}
+
+	/* global statesData */ //UPDATE nationData
+	const geojson = L.geoJson(nationData, {
+		style,
+		onEachFeature
+	}).addTo(map);
+
+	function resetHighlight(e) {
+		geojson.resetStyle(e.target);
+		info.update();
+	}
+
+	function zoomToFeature(e) {
+		map.fitBounds(e.target.getBounds());
+	}
+
+	function onEachFeature(feature, layer) {
+		layer.on({
+			mouseover: highlightFeature,
+			mouseout: resetHighlight,
+			click: zoomToFeature
+		});
+	}
+
+	map.attributionControl.addAttribution('SDG data &copy; <a href="https://unstats-undesa.opendata.arcgis.com/">UN SDG DataHub</a>');
+
+	const legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function (map) {
+
+		const div = L.DomUtil.create('div', 'info legend');
+		const grades = [0, 11, 21, 31, 41, 50];
+		const labels = [];
+		let from, to;
+
+		for (let i = 0; i < grades.length; i++) {
+			from = grades[i];
+			to = grades[i + 1];
+
+			labels.push(`<i style="background:${getColor(from + 1)}"></i> ${from}${to ? `&ndash;${to}` : '+'}`);
+		}
+
+		labels.push(`<i style="background:#FFFFFF"></i>  No Data`);
+
+		div.innerHTML = labels.join('<br>');
+		return div;
+	};
+
+	legend.addTo(map);
+
+</script>
+</body>
+</html>
