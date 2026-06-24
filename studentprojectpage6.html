@@ -127,20 +127,28 @@
     }
 
     /* =========================
-       FEATURE IMAGE (FIXED)
+       FEATURE IMAGE
     ========================== */
-    .feature-image-container img {
+    .feature-image-container {
       width: 100%;
-      height: 100%;
-      object-fit: contain; /* This prevents the image from cropping */
-      object-position: center;
-      background: #eaedf2; /* Optional: adds a soft neutral backdrop behind wide/tall maps */
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 3rem;
+      background: #eaedf2;
+      cursor: zoom-in;
+      transition: transform 0.2s ease;
+    }
+
+    .feature-image-container:hover {
+      transform: scale(1.005);
     }
 
     .feature-image-container img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       object-position: center;
     }
 
@@ -211,7 +219,7 @@
     ========================== */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(2, 1fr); /* Forces exactly 2 equal columns side-by-side */
+      grid-template-columns: repeat(2, 1fr);
       gap: 1.5rem;
       margin-top: 2rem;
     }
@@ -228,6 +236,7 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
     }
 
     .gallery-item:hover {
@@ -241,17 +250,65 @@
       object-fit: cover;
     }
 
-    /* Special style for PDF preview text icon if preview image fails */
     .pdf-fallback {
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #00000;
-      font-weight: 600;
-      font-size: 0.9rem;
-      gap: 0.5rem;
-      padding: 1rem;
-      text-align: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .pdf-fallback img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* =========================
+       LIGHTBOX OVERLAY SYSTEM
+    ========================== */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 85vh;
+      border-radius: 8px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: zoomIn 0.25s ease-out;
+      cursor: default;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #fff;
+      font-size: 45px;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     /* =========================
@@ -314,7 +371,7 @@
 
   <section class="hero">
     <div class="container">
-      <h1>Vegetation Classification (NDVI) <h1>
+      <h1>Vegetation Classification (NDVI)</h1>
       <p>
         Write a short professional summary of the project here. Explain the purpose of the project, the research question, or the sustainability challenge addressed.
       </p>
@@ -328,7 +385,7 @@
   </section>
 
   <div class="container">
-    <div class="feature-image-container">
+    <div class="feature-image-container" onclick="openLightbox('images/NDVI.png')" title="Click to enlarge">
       <img src="images/NDVI.png" alt="Main Project Map Feature Image">
     </div>
   </div>
@@ -379,11 +436,11 @@
                 <img src="images/Unsupervised.png" alt="Unsupervised Classification Map">
               </button>
               
-              <a href="images/CertificateESRI.pdf" target="_blank" class="gallery-item" aria-label="Open ESRI Certificate PDF">
+              <button class="gallery-item" onclick="openLightbox('images/ESRI.png')" aria-label="Zoom ESRI Certificate Image">
                 <div class="pdf-fallback">
-				 <img src="images/ESRI.png" alt="ESRI">
+                  <img src="images/ESRI.png" alt="ESRI Preview">
                 </div>
-              </a>
+              </button>
             </div>
           </div>
 
@@ -415,7 +472,7 @@
 
           <div class="sidebar-card">
             <h3>Downloads</h3>
-            <a href="images/CertificateESRI.pdf" download class="button">Download ESRI Certificate</a>
+            <a href="images/CertificateESRI.pdf" download target="_blank" class="button">Download ESRI Certificate</a>
             <br><br>
             <a href="#" class="button">View Map</a>
           </div>
@@ -425,6 +482,11 @@
     </div>
   </section>
 
+  <div id="lightboxModal" class="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImg" alt="Enlarged View" onclick="event.stopPropagation()">
+  </div>
+
   <footer>
     <div class="container">
       © 2026 GIS Student Portfolio
@@ -432,14 +494,24 @@
   </footer>
 
   <script>
-    // Simple placeholder logic for Lightbox feature
     function openLightbox(src) {
-      if(src.endsWith('.pdf')) {
-        window.open(src, '_blank');
-      } else {
-        alert('Opening image lightbox for: ' + src + '\n(Integrate your standard lightbox script here!)');
-      }
+      const modal = document.getElementById('lightboxModal');
+      const lightboxImg = document.getElementById('lightboxImg');
+      lightboxImg.src = src;
+      modal.classList.add('active');
     }
+
+    function closeLightbox() {
+      const modal = document.getElementById('lightboxModal');
+      modal.classList.remove('active');
+    }
+
+    // Modal cancellation map logic for the Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeLightbox();
+      }
+    });
   </script>
 
 </body>
