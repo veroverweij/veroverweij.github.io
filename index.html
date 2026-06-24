@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -287,6 +287,13 @@
     /* ======================
        ABOUT SECTION
     ======================= */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
     .about-box {
       background: var(--surface);
       padding: 2rem;
@@ -297,6 +304,28 @@
 
     .about-box p {
       color: var(--muted);
+    }
+
+    /* Target the paragraphs specifically inside the about-box to add balanced separation spacing */
+    .about-box p:not(:last-child) {
+      margin-bottom: 1.6rem;
+    }
+
+    .about-image-box {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     /* ======================
@@ -328,7 +357,7 @@
        MOBILE RESPONSIVENESS
     ======================= */
     @media(max-width:900px){
-      .hero-grid {
+      .hero-grid, .about-grid {
         grid-template-columns: 1fr;
       }
       nav {
@@ -389,11 +418,25 @@
       <div class="section-title">
         <h2>About Me</h2>
       </div>
-      <div class="about-box">
-        <p>I am Veronique Verweij, a student at University College Utrecht focusing on political science and sustainability. I am interested in GIS due to the possibilities it has within the field of conservation and sustainability. 
-			This is my first interaction with GIS and this portfolio shows the different skills I learned during the course.
-			This website shows everything I learned during my course on Geographical Information Systems and how I directly implemented the skills on real life applications.
-			</p>
+      <div class="about-grid">
+        <div class="about-box">
+          <p>I am Veronique Verweij, a student at University College Utrecht focusing on political science and sustainability. I am interested in GIS due to the possibilities it has within the field of conservation and sustainability. 
+          This is my first interaction with GIS and this portfolio shows the different skills I learned during the course.
+          This website shows everything I learned during my course on Geographical Information Systems and how I directly implemented the skills on real life applications.
+		  </p>
+		  <p>
+		  In my career, I would like to focus on sustainable development and diplomacy. For both fields, it is useful to be able to use GIS and understand the geographic implications.
+		  For example, for sustainability the possibilities for mapping are endless. From looking at what regions undergo the most deforestation to analyzing what areas are most prone to flooding.
+		  For diplomacy, GIS is more useful than one would think at first. For conflict resolution or border disputes, one can use maps for accuracy. GIS is also heavily used within humanitarian aid to coordinate aid distribution.
+		  Thus, GIS can be used in countless ways and this portfolio shows the first steps I made in understanding and using the software.
+          </p>
+		  <p>
+		  Do not be afraid to reach out if any questions or remarks occur. Enjoy looking at my page!
+          </p>
+        </div>
+        <div class="about-image-box">
+          <img src="images/Profile.jpeg" alt="Veronique Verweij" />
+        </div>
       </div>
     </div>
   </section>
@@ -404,7 +447,15 @@
         <h2>What is GIS and why is it important?</h2>
       </div>
       <div class="about-box">
-        <p>I am Veronique Verweij, a student at University College Utrecht focusing on political science and sustainability. I am interested in GIS due to the possibilities it has within the field of conservation and sustainability. This is my first interaction with GIS and this portfolio shows the different skills I learned during the course.</p>
+        <p>GIS stands for "Geographical Information Systems". It is a computer system that creates maps of all types, using geographical and spatial data. 
+        With GIS, abstract data becomes visible in maps that are clear for the main audience.  
+        There are countless implementations for GIS and it is used daily, from using google maps to tracking a parcel that was supposed to have arrived already. GIS is all around us.
+        Governments, municities, or even the ministry of defense, they all use GIS for their own interests. 
+        For example, one can look for the concentration of primary schools in an area, 
+        to locate which neighbourhoods have the least accessibility, which can lead to building new schools in such neighbourhoods. 
+        This is exactly what I tried to find in one of my projects, which can be found below!
+        
+        </p>
       </div>
     </div>
   </section>
