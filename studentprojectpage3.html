@@ -137,15 +137,21 @@
       max-width: 100%;
       border-radius: var(--radius);
       border: 1px solid var(--border);
-      overflow: hidden; /* Clips image corners cleanly to the rounded card edges */
+      overflow: hidden; 
       box-shadow: var(--shadow);
-      margin-bottom: 3rem; /* Tighter layout flow */
+      margin-bottom: 3rem; 
       background: #ffffff;
+      cursor: zoom-in;
+      transition: transform 0.2s ease;
+    }
+
+    .feature-image:hover {
+      transform: scale(1.01);
     }
 
     .feature-image img {
       width: 100%;
-      height: auto; /* Maintains original, normal aspect ratio */
+      height: auto; 
       display: block;
     }
     
@@ -232,7 +238,7 @@
         #e0ecff,
         #f5f9ff
       );
-      cursor: pointer;
+      cursor: zoom-in;
       overflow: hidden;
       padding: 0;
       display:flex;
@@ -257,18 +263,23 @@
     }
 
     .lightbox {
-      display: none;
+      display: none !important;
       position: fixed;
-      z-index: 2000;
+      z-index: 9999;
       left: 0;
       top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(4px);
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(6px);
       align-items: center;
       justify-content: center;
       cursor: zoom-out;
+    }
+
+    /* Target state class manipulated via JS */
+    .lightbox.active {
+      display: flex !important;
     }
 
     .lightbox-content {
@@ -277,6 +288,7 @@
       border-radius: 8px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       animation: zoomIn 0.25s ease-out;
+      cursor: default; 
     }
 
     .lightbox-close {
@@ -284,9 +296,10 @@
       top: 20px;
       right: 30px;
       color: #fff;
-      font-size: 40px;
+      font-size: 45px;
       font-weight: bold;
       cursor: pointer;
+      line-height: 1;
     }
 
     @keyframes zoomIn {
@@ -408,7 +421,7 @@
 
   <div class="container">
 
-    <div class="feature-image">
+    <div class="feature-image" onclick="openLightbox('images/Ooij_OSM.png')" title="Click to enlarge">
      <img src="images/Ooij_OSM.png" alt="Feature Image">
     </div>
 
@@ -427,7 +440,7 @@
             <h2>Project Overview</h2>
 
             <p>
-             For my region, I selected the Waal and its surrounding area, as my grandparents live in the Ooijpolder. For my region I chose to put the Ooijpolder and the river in the middle, 
+              For my region, I selected the Waal and its surrounding area, as my grandparents live in the Ooijpolder. For my region I chose to put the Ooijpolder and the river in the middle, 
 			 including a part of the city of Nijmegen and a few other villages. It is a region with beautiful nature, and I thought it would be interesting to see the change in elevation due to the dikes built in the area. 
 			 The area is known for its flooding and in 1995 the whole polder had to be evacuated, as the authorities were afraid it was going to flood. Therefore, a network of dikes was built to prevent further flooding. 
 			 Thus, one can easily recognize the dikes within a elevation map, which can help further understanding the situation around the Waal.
@@ -471,7 +484,7 @@
             <h2>Results & Findings</h2>
 
             <p>
-             In this first map, one can see the digital surface map, where the buildings are not taken into account.
+              In this first map, one can see the digital surface map, where the buildings are not taken into account.
 			 In the map one can clearly see that Nijmegen is much higher from the rest of the area. When looking at the satellite map, one can see that it is because Nijmegen is built on hills. 
 			 Below that map, one can see the digital terrain map, where the map focuses on how high the whole area is, including trees and buildings. This helps to concentrate the map more and only focus on the elevation of everything. 
 			 It is even more clear how high Nijmegen lies. A downside of this type of map is that the villages and city are not as clearly visible. 
@@ -513,13 +526,13 @@
               A few of the new skills I learned include learning to layer two maps on top of another to be able to analyze them both. Furthermore, to play around with shadow layers, 
 			 in order to help the visibility of the maps. To clip the maps to the wanted size, or to get rid of some unwanted parts was also new for me. 
 			 Overlaying two maps with coordinates to make them match perfectly on top of each other was a nice technique to learn as well.
-
-		
             </p>
 
             <p>
          The old map I chose for it did not have very clear black lines, which makes the differences within the map somewhat hard to read. 
-		In the next version, a map with clearer lines should be chosen, to clearly see the differences between the older and newer map
+		In the next version, a map with clearer lines should be chosen, to clearly see the differences between the older and newer map.
+		A map like this can be used for various reasons. The DSM map with elevation shows the region clearly and what areas are in danger of flooding, what experts could use for the next dikes.
+		For the general public, or people living in the area it is also interesting, as they can learn about their region. 
             </p>
 
           </div>
@@ -563,13 +576,7 @@
          <div class="sidebar-card">
             <h3>Downloads</h3>
             <a href="images/Ooij_OSM.png" download class="button">Download Map</a>
-            <br><br>
-            <a href="#" class="button">View Map</a>
           </div>
-        </div>
-
-          </div>
-
         </div>
 
       </div>
@@ -579,8 +586,8 @@
   </section>
 
   <div id="lightboxModal" class="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close">&times;</span>
-    <img class="lightbox-content" id="lightboxImg" alt="Enlarged view">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImg" alt="Enlarged view" onclick="event.stopPropagation()">
   </div>
 
   <footer>
@@ -598,12 +605,20 @@
       const modal = document.getElementById('lightboxModal');
       const lightboxImg = document.getElementById('lightboxImg');
       lightboxImg.src = imageSrc;
-      modal.style.display = 'flex';
+      modal.classList.add('active');
     }
 
     function closeLightbox() {
-      document.getElementById('lightboxModal').style.display = 'none';
+      const modal = document.getElementById('lightboxModal');
+      modal.classList.remove('active');
     }
+
+    // Allow closing the lightbox using the Escape keyboard key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeLightbox();
+      }
+    });
   </script>
 
 </body>
