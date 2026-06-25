@@ -373,7 +373,7 @@
     <div class="container">
       <h1>Vegetation Classification (NDVI)</h1>
       <p>
-        Write a short professional summary of the project here. Explain the purpose of the project, the research question, or the sustainability challenge addressed.
+	  A vegetation index map of Utrecht, showing the different types of vegetation and types of land use in Utrecht. Further I made vegetation classification maps, also on Utrecht.
       </p>
       <div class="hero-meta">
         <div class="meta-item">GIS Analysis</div>
@@ -397,31 +397,42 @@
         <div>
           <div class="content-card">
             <h2>Project Overview</h2>
-            <p>Introduce the project in more detail here. Describe the context, motivation, and overall goals of the work.</p>
-            <p>This section can explain:</p>
-            <ul>
-              <li>Research objectives</li>
-              <li>Study area</li>
-              <li>Environmental or social relevance</li>
-              <li>Why GIS methods were appropriate</li>
-            </ul>
+            <p>The objective of this map was to analyze environmental patterns through remote sensing and classification of land uses. 
+			I focused on vegetation health and the classification of land uses within Utrecht. 
+			I classified Utrecht by “training” the software to recognize certain properties as itself. 
+			To find the most accurate approach for environmental monitoring, 
+			this project compares a human-guided supervised classification against a fully automated unsupervised classification. 
+			The classification of a city can be valuable for environmental monitoring, 
+			as the program can understand and process large amounts of data, whilst humans would take years.  </p>
+            <p>I, thus, ended with three maps: an NDVI, unsupervised classification map and a supervised classification map.</p>
           </div>
 
           <div class="content-card">
             <h2>Methods</h2>
-            <p>Describe the GIS workflow and methods used.</p>
+            <p>First, I took a course by ESRI on Performing Supervised Pixel-Based Image Classification to understand the mechanics of training software. 
+		Once I had finished the course, 
+		I created a spectral profile for different land cover types. 
+		After, I trained the software by showing samples that correspond with specific land covers. I then ran the training samples through GeoWizard, 
+		where I got the unsupervised version first. Right after I also ran the supervised file with the training samples I made before.  
+		Lastly, I also made an NDVI version, where one can see the health of the vegetation of Utrecht.  </p>
             <ul>
-              <li>Data collection</li>
-              <li>Spatial analysis techniques</li>
-              <li>Remote sensing processing</li>
-              <li>Cartographic design choices</li>
-              <li>Software and tools used</li>
+              <li>Data collection: Satellite Imagery</li>
+              <li>Cartographic design choices: Changed the symbology to clearly separate the different land covers by color</li>
+              <li>Software and tools used: ArcGIS</li>
             </ul>
           </div>
 
           <div class="content-card">
             <h2>Results & Findings</h2>
-            <p>Explain the major findings of the project. Discuss spatial patterns, environmental implications, or planning recommendations.</p>
+            <p>The results of the unsupervised map are not super accurate; one can see where most buildings are urban or industrial, 
+			but the further classification is quite confusing. One can clearly see where the city is and where nature is, but once in nature the classification is not that accurate. 
+		Sadly, the same can be said for the supervised map. Even though water is mapped, the river was not taken into account. 
+		This was due to the training sample of the wetlands not being accurate and had some water in it as well. 
+		This caused the model to think that certain rivers are wetlands. However, in opposition to the unsupervised version, 
+		the developed region is much more accurate. The cultivated area is also much more concise and in balance with reality. 
+		The same can be said for the forest.  
+		The map of the NDVI of Utrecht shows that the city causes bad vegetation, or the lack of it. 
+		However, once out of the city, the amount of vegetation can be said to be quite healthy and dense.  </p>
             
             <div class="gallery">
               <button class="gallery-item" onclick="openLightbox('images/NDVI.png')" aria-label="Zoom Map 1">
@@ -446,19 +457,29 @@
 
           <div class="content-card">
             <h2>Reflection</h2>
-            <p>Discuss lessons learned, project limitations, and ideas for future improvements.</p>
-            <p>This section is useful for showing critical thinking, technical growth, and understanding of spatial analysis.</p>
+            <p>This was not my favorite map to work on. Mostly, 
+			because the training samples went wrong and I could not find a way to retry without having to restart everything. 
+			If I had more time or did a map again, I would definitely change this one. I do think training the software and it being quite accurate is cool to have learned. Some other limitations are that I would have exported from ArcGis, 
+			instead of making the screenshots I now did, which tempered with the quality of the image. </p>
+            <p>
+			Such maps are, however, very useful for real-life implications.  
+			They can be used by urban planners to look at whether there is enough greenery in the city. 
+			Furthermore, classification is useful to monitor biodiversity and habitat, 
+			to see whether habitats are shrinking or growing, allowing them to protect wildlife if needed.  
+			Overall, a very good skill to have acquired and interesting to train the software. 
+			I showcased the “garbage in, garbage out” principle, where if you train the samples wrong, 
+			the map comes out inaccurately. </p>
           </div>
         </div>
 
         <div>
           <div class="sidebar-card">
             <h3>Project Details</h3>
-            <p><strong>Student:</strong> Your Name</p>
-            <p><strong>Course:</strong> GIS Course Name</p>
-            <p><strong>Instructor:</strong> Instructor Name</p>
+            <p><strong>Student:</strong> Veronique Verweij</p>
+            <p><strong>Course:</strong> GIS </p>
+            <p><strong>Instructor:</strong> Britta Ricker</p>
             <p><strong>Date:</strong> Spring 2026</p>
-            <p><strong>Study Area:</strong> Aruba</p>
+            <p><strong>Study Area:</strong> Utrecht</p>
           </div>
 
           <div class="sidebar-card">
